@@ -44,7 +44,7 @@ public class EntryServiceImpl implements EntryService {
     dto.setStatus(entry.getStatus());
     dto.setWaitListPosition(getWaitListSize(entry));
     System.out.println("converted" + dto);
-    return null;
+    return dto;
   }
 
   @Override
