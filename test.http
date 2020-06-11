@@ -1,0 +1,23 @@
+### Create new reg
+POST http://localhost:8080/entry/
+content-type: application/json
+Accept: application/json
+
+{
+  "userId": "asd",
+  "day": "2020-06-11"
+}
+
+### Status call
+
+GET http://localhost:8080/entry/asd
+content-type: application/json
+Accept: application/json
+
+### Enter building
+
+PUT http://localhost:8080/entry/asd/enterDate
+
+### Leave building
+PUT http://localhost:8080/entry/asd/leaveDate
+
