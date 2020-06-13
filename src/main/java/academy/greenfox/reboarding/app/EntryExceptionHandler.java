@@ -76,7 +76,7 @@ public class EntryExceptionHandler {
         .map(requiredField -> fieldName(requiredField))
         .collect(Collectors.joining(","));
     int lastSeparatorIndex = errorMessage.lastIndexOf(',');
-    errorMessage = StringUtils.capitalize(errorMessage.substring(0, lastSeparatorIndex) + " and"
+    errorMessage = StringUtils.capitalize(errorMessage.substring(0, lastSeparatorIndex) + " and "
         + errorMessage.substring(lastSeparatorIndex + 1) + " are required.");
     return errorMessage;
   }
