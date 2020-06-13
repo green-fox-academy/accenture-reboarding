@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/entry")
 public class EntryController {
@@ -31,7 +33,7 @@ public class EntryController {
   }
 
   @PostMapping
-  public ResponseEntity<EntryDTO> register(@RequestBody Entry entry) throws RegisterException {
+  public ResponseEntity<EntryDTO> register(@RequestBody @Valid Entry entry) throws RegisterException {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(entry));
   }
   

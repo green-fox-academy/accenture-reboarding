@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -19,10 +20,9 @@ public class Entry {
   @GeneratedValue
   long id;
 
-  @NotNull
+  @NotEmpty
   String userId;
-
-  @NotNull
+  
   LocalDateTime createdAt;
 
   @NotNull
@@ -31,6 +31,5 @@ public class Entry {
   LocalDateTime leftAt;
 
   @Enumerated(EnumType.STRING)
-  @NotNull
   EntryStatus status;
 }
