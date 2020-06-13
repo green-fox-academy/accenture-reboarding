@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+
 @Service
 public class EntryServiceImpl implements EntryService {
 
