@@ -12,13 +12,21 @@ import org.springframework.stereotype.Service;
 public class EntryServiceImpl implements EntryService {
 
   private EntryRepository repo;
-  private static int ALLOWED_IN = 25;
+  private static int ALLOWED_IN;
 
   private Logger logger;
 
   public EntryServiceImpl(EntryRepository repo) {
     this.repo = repo;
     logger = LoggerFactory.getLogger(getClass());
+    try {
+      ALLOWED_IN = Integer.parseInt(System.getenv("REBOARDING_ALLOWED_IN"));
+      logger.info("ALLOWED_IN set to " + ALLOWED_IN);
+    } catch (NumberFormatException ex) {
+      logger.error("REBOARDING_ALLOWED_IN environment variable is not a valid whole number");
+      ALLOWED_IN = 25;
+      logger.info("ALLOWED_IN set to 25");
+    }
   }
 
   @Override
