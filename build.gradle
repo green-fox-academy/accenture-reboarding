@@ -12,6 +12,9 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	cucumberRuntime {
+    extendsFrom testImplementation
+  }
 }
 
 repositories {
@@ -29,8 +32,9 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+  testImplementation 'io.cucumber:cucumber-core:6.1.1'
+  testImplementation 'io.cucumber:cucumber-java:6.1.1'
+  testImplementation 'io.cucumber:cucumber-junit:6.1.1'
+  testImplementation 'io.cucumber:cucumber-spring:6.1.1'
 }
 
-test {
-	useJUnitPlatform()
-}
