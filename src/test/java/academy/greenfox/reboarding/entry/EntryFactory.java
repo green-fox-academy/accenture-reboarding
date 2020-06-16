@@ -9,7 +9,7 @@ public class EntryFactory {
 
   public static Entry create() {
     return create(
-      EntryStatus.values()[new Random().nextInt(EntryStatus.values().length)]);
+        EntryStatus.values()[new Random().nextInt(EntryStatus.values().length)]);
   }
 
   public static Entry create(String userId, EntryStatus status) {
