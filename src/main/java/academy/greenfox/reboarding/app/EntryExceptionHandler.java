@@ -1,6 +1,7 @@
 package academy.greenfox.reboarding.app;
 
 import academy.greenfox.reboarding.entry.EnterException;
+import academy.greenfox.reboarding.entry.NoSuchEntryException;
 import academy.greenfox.reboarding.entry.RegisterException;
 import academy.greenfox.reboarding.error.ErrorMessageDTO;
 
@@ -30,6 +31,11 @@ public class EntryExceptionHandler {
   @ExceptionHandler({RegisterException.class})
   public ResponseEntity<ErrorMessageDTO> alreadyRegistered(RegisterException exception) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDTO(exception.getMessage()));
+  }
+
+  @ExceptionHandler({NoSuchEntryException.class})
+  public ResponseEntity<ErrorMessageDTO> noSuchEntry(NoSuchEntryException exception) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDTO(exception.getMessage()));
   }
 
   @ExceptionHandler({HttpMessageNotReadableException.class})
@@ -91,5 +97,4 @@ public class EntryExceptionHandler {
   private String fieldName(ObjectError error) {
     return ((DefaultMessageSourceResolvable) error.getArguments()[0]).getDefaultMessage();
   }
-
 }

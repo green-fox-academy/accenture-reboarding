@@ -23,5 +23,4 @@ public class EntryDTO {
   
   int waitListPosition;
 
-
 }

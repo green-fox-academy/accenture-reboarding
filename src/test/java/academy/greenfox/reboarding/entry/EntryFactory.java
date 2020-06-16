@@ -9,7 +9,7 @@ public class EntryFactory {
 
   public static Entry create() {
     return create(
-      EntryStatus.values()[new Random().nextInt(EntryStatus.values().length)]);
+        EntryStatus.values()[new Random().nextInt(EntryStatus.values().length)]);
   }
 
   public static Entry create(String userId, EntryStatus status) {
@@ -17,7 +17,7 @@ public class EntryFactory {
     .day(LocalDate.now())
     .userId(userId)
     .enteredAt(LocalDateTime.now())
-    .leftAt(LocalDateTime.now())
+    .leftAt(LocalDateTime.now().plusMinutes(1))
     .status(status)
     .createdAt(LocalDateTime.now())
     .build();

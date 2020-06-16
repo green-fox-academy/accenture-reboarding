@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 public interface EntryRepository extends CrudRepository<Entry, Long> {
-  Entry findByUserIdAndDay(String userId, LocalDate day);
+  Optional<Entry> findByUserIdAndDay(String userId, LocalDate day);
 
   @Query("select count(e) from Entry e where e.day = ?1 and e.status = ?2 and e.createdAt < ?3")
   int countByDayAndStatus(LocalDate day, EntryStatus status, LocalDateTime before);
