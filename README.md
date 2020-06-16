@@ -12,3 +12,6 @@ docker run -p 8080:8080 green-fox-academy/re-boarding
 - Install [VS Code](https://code.visualstudio.com/)
 - Install [REST Client extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 - Open [test.http](test.http) file and run the examples
+
+## Swagger API documentation
+- http://localhost:8080/swagger-ui.html
