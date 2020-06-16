@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +34,7 @@ public class Entry {
   LocalDateTime createdAt;
 
   @NotNull
+  @JsonSerialize(using = ToStringSerializer.class)
   LocalDate day;
   LocalDateTime enteredAt;
   LocalDateTime leftAt;

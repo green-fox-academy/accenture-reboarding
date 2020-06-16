@@ -17,7 +17,7 @@ public class EntryFactory {
     .day(LocalDate.now())
     .userId(userId)
     .enteredAt(LocalDateTime.now())
-    .leftAt(LocalDateTime.now())
+    .leftAt(LocalDateTime.now().plusMinutes(1))
     .status(status)
     .createdAt(LocalDateTime.now())
     .build();

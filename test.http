@@ -16,8 +16,8 @@ Accept: application/json
 
 ### Enter building
 
-PUT http://localhost:8080/entry/asd/enterDate
+PUT http://localhost:8080/entry/asd/enter
 
 ### Leave building
-PUT http://localhost:8080/entry/asd/leaveDate
+PUT http://localhost:8080/entry/asd/leave
 

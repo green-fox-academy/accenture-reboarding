@@ -2,6 +2,7 @@ package academy.greenfox.reboarding.entry;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class EntryServiceImpl implements EntryService {
 
   private EntryRepository repo;
-  
   private int ALLOWED_IN;
 
   private Logger logger;
@@ -38,7 +38,7 @@ public class EntryServiceImpl implements EntryService {
   public EntryDTO create(Entry entry) throws RegisterException {
     entry.setCreatedAt(LocalDateTime.now());
     entry.setStatus(EntryStatus.WAITLISTED);
-    if (repo.findByUserIdAndDay(entry.getUserId(), entry.getDay()) != null) {
+    if (repo.findByUserIdAndDay(entry.getUserId(), entry.getDay()).isPresent()) {
       throw new RegisterException(RegisterException.ALREADY_REGISTERED);
     }
     if(repo.countByDayAndStatus(entry.getDay(), EntryStatus.ACCEPTED, entry.getCreatedAt()) < ALLOWED_IN) {
@@ -48,8 +48,10 @@ public class EntryServiceImpl implements EntryService {
   }
 
   @Override
-  public EntryDTO read(String userId) {
-    return convert(repo.findByUserIdAndDay(userId, LocalDate.now()));
+  public EntryDTO read(String userId) throws NoSuchEntryException {
+    return repo.findByUserIdAndDay(userId, LocalDate.now())
+        .map(this::convert)
+        .orElseThrow(() -> new NoSuchEntryException(userId));
   }
 
   @Override
@@ -76,8 +78,8 @@ public class EntryServiceImpl implements EntryService {
   }
 
   @Override
-  public EntryDTO enter(String userId) throws EnterException {
-    Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now());
+  public EntryDTO enter(String userId) throws EnterException, NoSuchEntryException {
+    Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now()).orElseThrow(() -> new NoSuchEntryException(userId));
     if(entry.getStatus().equals(EntryStatus.USED)) {
       throw new EnterException(EnterException.ALREADY_USED);
     } else if(entry.getStatus().equals(EntryStatus.WAITLISTED) && !enoughSpaceForWaitlisted(entry)) {
@@ -86,10 +88,10 @@ public class EntryServiceImpl implements EntryService {
     entry.setEnteredAt(LocalDateTime.now());
     return convert(repo.save(entry));
   }
-  
+
   @Override
-  public EntryDTO leave(String userId) {
-    Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now());
+  public EntryDTO leave(String userId) throws NoSuchEntryException {
+    Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now()).orElseThrow(() -> new NoSuchEntryException(userId));
     entry.setLeftAt(LocalDateTime.now());
     entry.setStatus(EntryStatus.USED);
     Optional<Entry> other = repo.findFirstByUserIdAndDay(entry.getDay(), EntryStatus.WAITLISTED);

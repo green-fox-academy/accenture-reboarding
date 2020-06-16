@@ -30,7 +30,7 @@ public class EntryServiceImplTest {
 
   @Test
   public void testRead() {
-    when(repo.findByUserIdAndDay(anyString(), any())).thenReturn(EntryFactory.create());
+    when(repo.findByUserIdAndDay(anyString(), any())).thenReturn(Optional.of(EntryFactory.create()));
 
     String userId = "userId";
     service.read(userId);
@@ -149,7 +149,7 @@ public class EntryServiceImplTest {
       repo.findByUserIdAndDay(
         eq(entry.getUserId()),
         eq(entry.getDay()))
-      ).thenReturn(new Entry());
+      ).thenReturn(Optional.of(new Entry()));
     
     Exception actual = assertThrows(RegisterException.class, () -> {
       service.create(entry);
@@ -166,7 +166,7 @@ public class EntryServiceImplTest {
       repo.findByUserIdAndDay(
         eq(entry.getUserId()),
         any())
-    ).thenReturn(entry);
+    ).thenReturn(Optional.of(entry));
 
     Exception actual = assertThrows(EnterException.class, () -> {
       service.enter(entry.getUserId());
@@ -183,7 +183,7 @@ public class EntryServiceImplTest {
       repo.findByUserIdAndDay(
         eq(entry.getUserId()),
         any())
-    ).thenReturn(entry);
+    ).thenReturn(Optional.of(entry));
 
     when(
       repo.countByDayAndStatus(
@@ -210,7 +210,7 @@ public class EntryServiceImplTest {
       repo.findByUserIdAndDay(
         eq(entry.getUserId()),
         any())
-    ).thenReturn(entry);
+    ).thenReturn(Optional.of(entry));
 
     when(
       repo.countByDayAndStatus(
@@ -234,7 +234,7 @@ public class EntryServiceImplTest {
     when(repo.findByUserIdAndDay(
       eq(entry.getUserId()),
       any())
-    ).thenReturn(entry);
+    ).thenReturn(Optional.of(entry));
 
     when(repo.save(eq(entry))).thenReturn(entry);
 
@@ -251,7 +251,7 @@ public class EntryServiceImplTest {
     when(repo.findByUserIdAndDay(
       eq(entry.getUserId()),
       any())
-    ).thenReturn(entry);
+    ).thenReturn(Optional.of(entry));
 
     when(repo.findFirstByUserIdAndDay(
       eq(entry.getDay()),
@@ -264,5 +264,4 @@ public class EntryServiceImplTest {
     assertEquals(EntryStatus.USED, entry.getStatus());
     assertEquals(EntryStatus.ACCEPTED, other.getStatus());
   }
-
 }

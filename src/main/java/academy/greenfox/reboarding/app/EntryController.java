@@ -4,6 +4,7 @@ import academy.greenfox.reboarding.entry.EnterException;
 import academy.greenfox.reboarding.entry.Entry;
 import academy.greenfox.reboarding.entry.EntryDTO;
 import academy.greenfox.reboarding.entry.EntryService;
+import academy.greenfox.reboarding.entry.NoSuchEntryException;
 import academy.greenfox.reboarding.entry.RegisterException;
 
 import org.slf4j.Logger;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/entry")
+@RequestMapping({EntryController.ENTRY_PATH})
 public class EntryController {
-  EntryService service;
+  public static final String ENTRY_PATH = "/entry";
+
+  private EntryService service;
 
   Logger logger;
 
@@ -33,7 +36,7 @@ public class EntryController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<EntryDTO> status(@PathVariable String userId) {
+  public ResponseEntity<EntryDTO> status(@PathVariable String userId) throws NoSuchEntryException {
     logger.info("GET /entry/" + userId);
     return ResponseEntity.ok(service.read(userId));
   }
@@ -43,17 +46,16 @@ public class EntryController {
     logger.info("POST /entry");
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(entry));
   }
-  
-  @PutMapping("/{userId}/enterDate")
-  public ResponseEntity<EntryDTO> enter(@PathVariable String userId) throws EnterException {
-    logger.info("PUT /entry/" + userId + "/enterDate");
+
+  @PutMapping("/{userId}/enter")
+  public ResponseEntity<EntryDTO> enter(@PathVariable String userId) throws EnterException, NoSuchEntryException {
+    logger.info("PUT /entry/" + userId + "/enter");
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.enter(userId));
   }
   
-  @PutMapping("/{userId}/leaveDate")
-  public ResponseEntity<EntryDTO> leave(@PathVariable String userId) {
-    logger.info("PUT /entry/" + userId + "/leaveDate");
+  @PutMapping("/{userId}/leave")
+  public ResponseEntity<EntryDTO> leave(@PathVariable String userId) throws NoSuchEntryException {
+    logger.info("PUT /entry/" + userId + "/leave");
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.leave(userId));
   }
-
 }
