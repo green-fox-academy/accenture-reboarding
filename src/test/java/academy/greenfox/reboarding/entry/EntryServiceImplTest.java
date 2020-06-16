@@ -25,12 +25,12 @@ public class EntryServiceImplTest {
   @BeforeEach
   public void setUp() {
     repo = Mockito.mock(EntryRepository.class);
-    service = new EntryServiceImpl(repo);
+    service = new EntryServiceImpl(repo, 25, 25);
   }
 
   @Test
   public void testRead() {
-    when(repo.findByUserIdAndDay(anyString(), any())).thenReturn(new Entry());
+    when(repo.findByUserIdAndDay(anyString(), any())).thenReturn(EntryFactory.create());
 
     String userId = "userId";
     service.read(userId);
@@ -155,7 +155,7 @@ public class EntryServiceImplTest {
       service.create(entry);
     });
 
-    assertEquals("This user is registered for the day.", actual.getMessage());
+    assertEquals(RegisterException.ALREADY_REGISTERED, actual.getMessage());
   }
 
   @Test
@@ -172,7 +172,7 @@ public class EntryServiceImplTest {
       service.enter(entry.getUserId());
     });
 
-    assertEquals("Try another day, you workaholic!", actual.getMessage());
+    assertEquals(EnterException.ALREADY_USED, actual.getMessage());
   }
 
   @Test
@@ -199,7 +199,7 @@ public class EntryServiceImplTest {
       service.enter(entry.getUserId());
     });
 
-    assertEquals("Not your turn, bitch.", actual.getMessage());
+    assertEquals(EnterException.NOT_ENOUGH_SPACE, actual.getMessage());
   }
 
   @Test
@@ -240,6 +240,7 @@ public class EntryServiceImplTest {
 
     assertNotNull(service.leave(entry.getUserId()).getLeftAt());
     assertEquals(EntryStatus.USED, entry.getStatus());
+    assertTrue(entry.getEnteredAt().isBefore(entry.getLeftAt()));
   }
 
   @Test

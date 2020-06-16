@@ -6,27 +6,32 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EntryServiceImpl implements EntryService {
 
   private EntryRepository repo;
-  private static int ALLOWED_IN;
+  
+  private int ALLOWED_IN;
 
   private Logger logger;
 
-  public EntryServiceImpl(EntryRepository repo) {
+  public EntryServiceImpl(
+    EntryRepository repo,
+    @Value("${entry.allowedIn.default}") Integer allowedInDefault,
+    @Value("${entry.allowedIn.limit}") Integer allowedIn
+    ) {
     this.repo = repo;
     logger = LoggerFactory.getLogger(getClass());
-    try {
-      ALLOWED_IN = Integer.parseInt(System.getenv("REBOARDING_ALLOWED_IN"));
-      logger.info("ALLOWED_IN set to " + ALLOWED_IN);
-    } catch (NumberFormatException ex) {
+    if(allowedIn == null) {
       logger.error("REBOARDING_ALLOWED_IN environment variable is not a valid whole number");
-      ALLOWED_IN = 25;
-      logger.info("ALLOWED_IN set to 25");
+      logger.info("ALLOWED_IN set to default");
+      allowedIn = allowedInDefault;
     }
+    ALLOWED_IN = allowedIn;
+    logger.info("ALLOWED_IN set to " + ALLOWED_IN);
   }
 
   @Override
@@ -34,7 +39,7 @@ public class EntryServiceImpl implements EntryService {
     entry.setCreatedAt(LocalDateTime.now());
     entry.setStatus(EntryStatus.WAITLISTED);
     if (repo.findByUserIdAndDay(entry.getUserId(), entry.getDay()) != null) {
-      throw new RegisterException("This user is registered for the day.");
+      throw new RegisterException(RegisterException.ALREADY_REGISTERED);
     }
     if(repo.countByDayAndStatus(entry.getDay(), EntryStatus.ACCEPTED, entry.getCreatedAt()) < ALLOWED_IN) {
       entry.setStatus(EntryStatus.ACCEPTED);
@@ -74,9 +79,9 @@ public class EntryServiceImpl implements EntryService {
   public EntryDTO enter(String userId) throws EnterException {
     Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now());
     if(entry.getStatus().equals(EntryStatus.USED)) {
-      throw new EnterException("Try another day, you workaholic!");
+      throw new EnterException(EnterException.ALREADY_USED);
     } else if(entry.getStatus().equals(EntryStatus.WAITLISTED) && !enoughSpaceForWaitlisted(entry)) {
-      throw new EnterException("Not your turn, bitch.");
+      throw new EnterException(EnterException.NOT_ENOUGH_SPACE);
     }
     entry.setEnteredAt(LocalDateTime.now());
     return convert(repo.save(entry));
