@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "reservation"
+		},
+		{
+			"path": "image-recognition"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}
