@@ -30,6 +30,8 @@ public class Entry {
 
   @NotEmpty
   String userId;
+  @NotEmpty
+  String officeId;
   
   LocalDateTime createdAt;
 
