@@ -30,3 +30,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+layouts/
+marks/
+templates/
+
+dotenv.sh
