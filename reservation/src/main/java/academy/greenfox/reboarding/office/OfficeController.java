@@ -25,7 +25,7 @@ public class OfficeController {
   }
 
   @PutMapping("/{officeId}")
-  public ResponseEntity<Office> setUpSeats(@PathVariable String officeId, @RequestBody SeatSetupDTO seatSetup) {
+  public ResponseEntity<Office> setUpSeats(@PathVariable String officeId, @RequestBody SeatSetup seatSetup) {
     return ResponseEntity.status(HttpStatus.OK).body(officeService.setupSeats(officeId, seatSetup));
   }
 

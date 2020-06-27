@@ -1,10 +1,10 @@
 package academy.greenfox.reboarding.app;
 
 import academy.greenfox.reboarding.entry.EnterException;
-import academy.greenfox.reboarding.entry.Entry;
 import academy.greenfox.reboarding.entry.EntryDTO;
 import academy.greenfox.reboarding.entry.EntryDTOFactory;
 import academy.greenfox.reboarding.entry.EntryFactory;
+import academy.greenfox.reboarding.entry.EntryRequest;
 import academy.greenfox.reboarding.entry.EntryService;
 import academy.greenfox.reboarding.entry.EntryStatus;
 import academy.greenfox.reboarding.entry.NoSuchEntryException;
@@ -38,6 +38,7 @@ public class EntryControllerTest {
 
   private static ObjectMapper objectMapper;
   private static String userId;
+  private static String officeId;
 
   @Autowired
   private MockMvc mockMvc;
@@ -48,6 +49,7 @@ public class EntryControllerTest {
   public static void setUp() {
     objectMapper = new ObjectMapper();
     userId = "chuck";
+    officeId = "A66";
   }
 
   @Test
@@ -60,6 +62,7 @@ public class EntryControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.userId", is(userId)))
+        .andExpect(jsonPath("$.officeId", is(officeId)))
         .andExpect(jsonPath("$.status", is(EntryStatus.ACCEPTED.name())))
         .andExpect(jsonPath("$.day", is(LocalDate.now().toString())))
         .andExpect(jsonPath("$.waitListPosition", is(0)));
@@ -77,23 +80,25 @@ public class EntryControllerTest {
 
   @Test
   public void testRegisterWhenValidEntry() throws Exception {
-    Entry entry = EntryFactory.createRequest();
-    EntryDTO expectedResponse = EntryDTOFactory.create(entry.getUserId(), EntryStatus.ACCEPTED, entry.getDay());
+    EntryRequest req = EntryFactory.createRequest();
+    EntryDTO expectedResponse = EntryDTOFactory.create(req.getUserId(), EntryStatus.ACCEPTED, req.getDay());
 
-    when(entryService.create(eq(entry))).thenReturn(expectedResponse);
+    when(entryService.create(eq(req))).thenReturn(expectedResponse);
 
     mockMvc.perform(post(EntryController.ENTRY_PATH)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(entry)))
+        .content(objectMapper.writeValueAsString(req)))
         .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.userId", is(entry.getUserId())))
-        .andExpect(jsonPath("$.day", is(entry.getDay().toString())));
+        .andExpect(jsonPath("$.userId", is(req.getUserId())))
+        .andExpect(jsonPath("$.officeId", is(officeId)))
+        .andExpect(jsonPath("$.seatId").exists())
+        .andExpect(jsonPath("$.day", is(req.getDay().toString())));
   }
 
   @Test
   public void testRegisterWhenExistingEntry() throws Exception {
-    Entry entry = EntryFactory.createRequest();
+    EntryRequest entry = EntryFactory.createRequest();
 
     when(entryService.create(eq(entry)))
         .thenThrow(new RegisterException(RegisterException.ALREADY_REGISTERED));
@@ -116,6 +121,7 @@ public class EntryControllerTest {
         .andExpect(status().isAccepted())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.userId", is(userId)))
+        .andExpect(jsonPath("$.officeId", is(officeId)))
         .andExpect(jsonPath("$.status", is(EntryStatus.ACCEPTED.name())))
         .andExpect(jsonPath("$.enteredAt").exists());
   }
@@ -160,6 +166,7 @@ public class EntryControllerTest {
         .andExpect(status().isAccepted())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.userId", is(userId)))
+        .andExpect(jsonPath("$.officeId", is(officeId)))
         .andExpect(jsonPath("$.status", is(EntryStatus.USED.name())))
         .andExpect(jsonPath("$.enteredAt").exists())
         .andExpect(jsonPath("$.leftAt").exists());

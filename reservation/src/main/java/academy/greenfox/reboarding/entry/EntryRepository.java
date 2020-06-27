@@ -15,7 +15,4 @@ public interface EntryRepository extends CrudRepository<Entry, Long> {
 
   @Query("select e from Entry e where e.day = ?1 and e.status = ?2 order by e.createdAt ASC")
   Optional<Entry> findFirstByUserIdAndDay(LocalDate day, EntryStatus status);
-  
-  @Query("select count(e) from Entry e where e.day = ?1 and e.enteredAt < ?2 and e.leftAt = ?3")
-  int countByDayAndEnterAtAndLeftAt(LocalDate day, LocalDateTime enteredAt, LocalDateTime leftAt);
 }

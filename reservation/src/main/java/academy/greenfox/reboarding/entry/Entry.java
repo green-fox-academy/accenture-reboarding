@@ -3,16 +3,17 @@ package academy.greenfox.reboarding.entry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import academy.greenfox.reboarding.seat.Seat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,11 +33,12 @@ public class Entry {
   String userId;
   @NotEmpty
   String officeId;
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  Seat seat;
   
   LocalDateTime createdAt;
 
   @NotNull
-  @JsonSerialize(using = ToStringSerializer.class)
   LocalDate day;
   LocalDateTime enteredAt;
   LocalDateTime leftAt;

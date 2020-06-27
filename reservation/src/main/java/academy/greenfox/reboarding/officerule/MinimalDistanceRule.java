@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-final class MinimalDistance implements OfficeRule {
+final class MinimalDistanceRule implements OfficeRule {
 
   public static final String MESSAGE = "TOO CLOSE";
   Logger logger;
@@ -23,7 +23,7 @@ final class MinimalDistance implements OfficeRule {
   private int pixelsPerMeter;
   private int minimalPixels;
 
-  public MinimalDistance() {
+  public MinimalDistanceRule() {
     logger = LoggerFactory.getLogger(getClass());
   }
 

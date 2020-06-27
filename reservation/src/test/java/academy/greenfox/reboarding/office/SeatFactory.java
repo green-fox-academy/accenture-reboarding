@@ -8,13 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SeatFactory {
 
-  private AtomicInteger idGenerator;
+  private static AtomicInteger idGenerator = new AtomicInteger();
 
-  public SeatFactory() {
-    idGenerator = new AtomicInteger();
-  }
-
-  public Seat create(double x, double y) {
+  public static Seat create(double x, double y) {
     return Seat.builder()
         .id(idGenerator.getAndIncrement())
         .position(new Position(x, y))

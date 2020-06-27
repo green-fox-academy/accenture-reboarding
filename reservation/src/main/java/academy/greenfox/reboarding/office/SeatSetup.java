@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SeatSetupDTO {
+public class SeatSetup {
 
   List<Position> matches;
 

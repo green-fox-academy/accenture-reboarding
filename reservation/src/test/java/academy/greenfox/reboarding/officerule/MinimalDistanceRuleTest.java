@@ -12,9 +12,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MinimalDistanceTest {
+public class MinimalDistanceRuleTest {
 
-  private MinimalDistance minimalDistance;
+  private MinimalDistanceRule minimalDistanceRule;
   private SeatFactory seatFactory;
   private int minimalMetresFromEachOther;
   private int pixelsPerMeter;
@@ -22,15 +22,15 @@ public class MinimalDistanceTest {
 
   @BeforeEach
   public void setUp() {
-    minimalDistance = new MinimalDistance();
+    minimalDistanceRule = new MinimalDistanceRule();
     seatFactory = new SeatFactory();
     minimalMetresFromEachOther = 5;
     pixelsPerMeter = 10;
     minimalPixels = minimalMetresFromEachOther * pixelsPerMeter;
     minimalPixels = minimalMetresFromEachOther * pixelsPerMeter;
-    ReflectionTestUtils.setField(minimalDistance, "minimalMetresFromEachOther", minimalMetresFromEachOther);
-    ReflectionTestUtils.setField(minimalDistance, "pixelsPerMeter", pixelsPerMeter);
-    ReflectionTestUtils.setField(minimalDistance, "minimalPixels", minimalPixels);
+    ReflectionTestUtils.setField(minimalDistanceRule, "minimalMetresFromEachOther", minimalMetresFromEachOther);
+    ReflectionTestUtils.setField(minimalDistanceRule, "pixelsPerMeter", pixelsPerMeter);
+    ReflectionTestUtils.setField(minimalDistanceRule, "minimalPixels", minimalPixels);
   }
 
   @Test
@@ -44,13 +44,13 @@ public class MinimalDistanceTest {
       put(seat3.getId(), seat3);
     }};
 
-    seats = minimalDistance.apply(seats);
+    seats = minimalDistanceRule.apply(seats);
 
     assertEquals(SeatStatus.FREE, seats.get(seat1.getId()).getStatus());
     assertEquals(SeatStatus.NOT_AVAILABLE, seats.get(seat2.getId()).getStatus());
-    assertEquals(MinimalDistance.MESSAGE, seats.get(seat2.getId()).getMessage());
+    assertEquals(MinimalDistanceRule.MESSAGE, seats.get(seat2.getId()).getMessage());
     assertEquals(SeatStatus.NOT_AVAILABLE, seats.get(seat3.getId()).getStatus());
-    assertEquals(MinimalDistance.MESSAGE, seats.get(seat3.getId()).getMessage());
+    assertEquals(MinimalDistanceRule.MESSAGE, seats.get(seat3.getId()).getMessage());
   }
 
   @Test
@@ -64,7 +64,7 @@ public class MinimalDistanceTest {
       put(seat3.getId(), seat3);
     }};
 
-    seats = minimalDistance.apply(seats);
+    seats = minimalDistanceRule.apply(seats);
 
     assertEquals(SeatStatus.FREE, seats.get(seat1.getId()).getStatus());
     assertEquals(SeatStatus.FREE, seats.get(seat2.getId()).getStatus());
@@ -86,7 +86,7 @@ public class MinimalDistanceTest {
       put(farSeat.getId(), farSeat);
     }};
 
-    seats = minimalDistance.apply(seats);
+    seats = minimalDistanceRule.apply(seats);
 
     assertEquals(SeatStatus.FREE, seats.get(seat.getId()).getStatus());
     assertEquals(SeatStatus.NOT_AVAILABLE, seats.get(closeSeat.getId()).getStatus());

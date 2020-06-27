@@ -30,10 +30,10 @@ public class Seat {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   int id;
   @Embedded
-  @AttributeOverrides({
-      @AttributeOverride(name = "x", column = @Column(name = "x")),
-      @AttributeOverride(name = "y", column = @Column(name = "y"))
-  })
+//  @AttributeOverrides({
+//      @AttributeOverride(name = "x", column = @Column(name = "x")),
+//      @AttributeOverride(name = "y", column = @Column(name = "y"))
+//  })
   Position position;
   @Enumerated(EnumType.STRING)
   SeatStatus status;

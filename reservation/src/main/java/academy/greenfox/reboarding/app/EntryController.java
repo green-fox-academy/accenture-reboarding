@@ -3,6 +3,7 @@ package academy.greenfox.reboarding.app;
 import academy.greenfox.reboarding.entry.EnterException;
 import academy.greenfox.reboarding.entry.Entry;
 import academy.greenfox.reboarding.entry.EntryDTO;
+import academy.greenfox.reboarding.entry.EntryRequest;
 import academy.greenfox.reboarding.entry.EntryService;
 import academy.greenfox.reboarding.entry.NoSuchEntryException;
 import academy.greenfox.reboarding.entry.RegisterException;
@@ -42,7 +43,7 @@ public class EntryController {
   }
 
   @PostMapping
-  public ResponseEntity<EntryDTO> register(@RequestBody @Valid Entry entry) throws RegisterException {
+  public ResponseEntity<EntryDTO> register(@RequestBody @Valid EntryRequest entry) throws RegisterException {
     logger.info("POST /entry");
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(entry));
   }

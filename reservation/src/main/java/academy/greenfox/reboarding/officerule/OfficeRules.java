@@ -10,11 +10,10 @@ public final class OfficeRules {
 
   public List<OfficeRule> rules;
 
-  public OfficeRules(MinimalDistance minimalDistance) {
+  public OfficeRules(MinimalDistanceRule minimalDistanceRule) {
     rules = Arrays.asList(
-        minimalDistance
+        minimalDistanceRule
     );
   }
-
 
 }

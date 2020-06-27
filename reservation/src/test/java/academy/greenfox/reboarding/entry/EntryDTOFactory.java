@@ -13,6 +13,8 @@ public class EntryDTOFactory {
     return EntryDTO.builder()
         .userId(userId)
         .status(status)
+        .officeId("A66")
+        .seatId(1)
         .day(day)
         .enteredAt(null)
         .leftAt(null)

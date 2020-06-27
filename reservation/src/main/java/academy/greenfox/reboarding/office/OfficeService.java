@@ -8,8 +8,10 @@ public interface OfficeService {
 
   Office registerOffice(Office office);
 
-  Office setupSeats(String officeId, SeatSetupDTO seats) throws NoSuchOfficeException;
+  Office setupSeats(String officeId, SeatSetup seats) throws NoSuchOfficeException;
 
-  Map<Integer, Seat> convertToSeats(Office office, SeatSetupDTO seats);
+  Map<Integer, Seat> convertToSeats(Office office, SeatSetup seats);
+
+  Seat reserveASeat(String officeId, String userId) throws NoSuchOfficeException;
 
 }
