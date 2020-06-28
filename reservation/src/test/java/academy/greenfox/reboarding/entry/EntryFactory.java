@@ -1,5 +1,7 @@
 package academy.greenfox.reboarding.entry;
 
+import academy.greenfox.reboarding.office.SeatFactory;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -16,6 +18,8 @@ public class EntryFactory {
     return Entry.builder()
     .day(LocalDate.now())
     .userId(userId)
+    .officeId("A66")
+    .seat(SeatFactory.create(100, 100))
     .enteredAt(LocalDateTime.now())
     .leftAt(LocalDateTime.now().plusMinutes(1))
     .status(status)
@@ -27,9 +31,10 @@ public class EntryFactory {
     return create(UUID.randomUUID().toString(), status);
   }
 
-  public static Entry createRequest() {
-    return Entry.builder()
-    .userId("userId")
+  public static EntryRequest createRequest() {
+    return EntryRequest.builder()
+    .userId("chuck")
+    .officeId("A66")
     .day(LocalDate.now())
     .build();
   }

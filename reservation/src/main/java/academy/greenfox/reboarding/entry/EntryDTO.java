@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class EntryDTO {
 
   String userId;
+  String officeId;
+  Integer seatId;
   EntryStatus status;
 
   LocalDate day;
