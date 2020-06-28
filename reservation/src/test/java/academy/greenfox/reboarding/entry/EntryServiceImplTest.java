@@ -1,7 +1,6 @@
 package academy.greenfox.reboarding.entry;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import academy.greenfox.reboarding.office.OfficeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,19 +20,24 @@ import org.mockito.Mockito;
 
 public class EntryServiceImplTest {
   private EntryServiceImpl service;
+  private OfficeService officeService;
   private EntryRepository repo;
+  private String userId;
+  private String officeId;
 
   @BeforeEach
   public void setUp() {
     repo = Mockito.mock(EntryRepository.class);
-    service = new EntryServiceImpl(repo, 25, 25);
+    officeService = Mockito.mock(OfficeService.class);
+    service = new EntryServiceImpl(repo, officeService);
+    userId = "chuck";
+    officeId = "A66";
   }
 
   @Test
   public void testRead() {
     when(repo.findByUserIdAndDay(anyString(), any())).thenReturn(Optional.of(EntryFactory.create()));
 
-    String userId = "userId";
     service.read(userId);
 
     verify(repo).findByUserIdAndDay(eq(userId), any());
@@ -52,6 +57,8 @@ public class EntryServiceImplTest {
     EntryDTO expected = EntryDTO.builder()
       .day(entry.getDay())
       .userId(entry.getUserId())
+      .officeId(entry.getOfficeId())
+      .seatId(entry.getSeat().getId())
       .enteredAt(entry.getEnteredAt())
       .leftAt(entry.getLeftAt())
       .status(entry.getStatus())
@@ -76,83 +83,53 @@ public class EntryServiceImplTest {
   }
 
   @Test
-  public void testEnoughSpaceForWaitlisted() {
-    Entry entry = EntryFactory.create();
-
-    when(
-      repo.countByDayAndStatus(
-        eq(entry.getDay()),
-        eq(EntryStatus.WAITLISTED),
-        eq(entry.getCreatedAt())))
-      .thenReturn(5);
-    
-    when(repo.countByDayAndEnterAtAndLeftAt(any(), any(), eq(null)))
-      .thenReturn(10);
-
-    assertTrue(service.enoughSpaceForWaitlisted(entry));
-  }
-
-  @Test
-  public void testNotEnoughSpaceForWaitlisted() {
-    Entry entry = EntryFactory.create();
-
-    when(
-      repo.countByDayAndStatus(
-        eq(entry.getDay()),
-        eq(EntryStatus.WAITLISTED),
-        eq(entry.getCreatedAt())))
-      .thenReturn(5);
-    
-    when(repo.countByDayAndEnterAtAndLeftAt(any(), any(), eq(null)))
-      .thenReturn(24);
-
-    assertFalse(service.enoughSpaceForWaitlisted(entry));
-  }
-
-  @Test
   public void testCreateWaitlisted() throws RegisterException {
-    Entry entry = EntryFactory.createRequest();
+    EntryRequest req = EntryFactory.createRequest();
+    Entry entry = EntryFactory.create(EntryStatus.WAITLISTED);
     
     when(
       repo.countByDayAndStatus(
-        eq(entry.getDay()),
+        eq(req.getDay()),
         eq(EntryStatus.ACCEPTED),
         any()))
       .thenReturn(26);
+
+    when(officeService.reserveASeat(eq(officeId), eq(userId))).thenReturn(null);
     
-    when(repo.save(eq(entry))).thenReturn(entry);
+    when(repo.save(any(Entry.class))).thenReturn(entry);
     
-    assertEquals(EntryStatus.WAITLISTED, service.create(entry).getStatus());
+    assertEquals(EntryStatus.WAITLISTED, service.create(req).getStatus());
   }
 
   @Test
   public void testCreateAccepted() throws RegisterException {
-    Entry entry = EntryFactory.createRequest();
+    EntryRequest req = EntryFactory.createRequest();
+    Entry entry = EntryFactory.create(EntryStatus.ACCEPTED);
 
     when(
       repo.countByDayAndStatus(
-        eq(entry.getDay()),
+        eq(req.getDay()),
         eq(EntryStatus.ACCEPTED),
         any()))
       .thenReturn(1);
     
-    when(repo.save(eq(entry))).thenReturn(entry);
+    when(repo.save(any(Entry.class))).thenReturn(entry);
     
-    assertEquals(EntryStatus.ACCEPTED, service.create(entry).getStatus());
+    assertEquals(EntryStatus.ACCEPTED, service.create(req).getStatus());
   }
 
   @Test
   public void testCreateAlreadyRegistered() throws RegisterException {
-    Entry entry = EntryFactory.createRequest();
+    EntryRequest req = EntryFactory.createRequest();
 
     when(
       repo.findByUserIdAndDay(
-        eq(entry.getUserId()),
-        eq(entry.getDay()))
+        eq(req.getUserId()),
+        eq(req.getDay()))
       ).thenReturn(Optional.of(new Entry()));
     
     Exception actual = assertThrows(RegisterException.class, () -> {
-      service.create(entry);
+      service.create(req);
     });
 
     assertEquals(RegisterException.ALREADY_REGISTERED, actual.getMessage());
@@ -191,9 +168,6 @@ public class EntryServiceImplTest {
         eq(EntryStatus.WAITLISTED),
         eq(entry.getCreatedAt())))
       .thenReturn(5);
-    
-    when(repo.countByDayAndEnterAtAndLeftAt(any(), any(), eq(null)))
-      .thenReturn(24);
 
     Exception actual = assertThrows(EnterException.class, () -> {
       service.enter(entry.getUserId());
@@ -204,23 +178,13 @@ public class EntryServiceImplTest {
 
   @Test
   public void testEnterSuccess() throws EnterException {
-    Entry entry = EntryFactory.create(EntryStatus.WAITLISTED);
+    Entry entry = EntryFactory.create(EntryStatus.ACCEPTED);
 
     when(
       repo.findByUserIdAndDay(
         eq(entry.getUserId()),
         any())
     ).thenReturn(Optional.of(entry));
-
-    when(
-      repo.countByDayAndStatus(
-        eq(entry.getDay()),
-        eq(EntryStatus.WAITLISTED),
-        eq(entry.getCreatedAt())))
-      .thenReturn(5);
-    
-    when(repo.countByDayAndEnterAtAndLeftAt(any(), any(), eq(null)))
-      .thenReturn(10);
 
     when(repo.save(eq(entry))).thenReturn(entry);
 
