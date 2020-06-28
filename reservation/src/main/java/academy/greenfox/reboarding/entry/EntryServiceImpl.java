@@ -2,17 +2,14 @@ package academy.greenfox.reboarding.entry;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import academy.greenfox.reboarding.office.NoSuchOfficeException;
-import academy.greenfox.reboarding.office.Office;
 import academy.greenfox.reboarding.office.OfficeService;
 import academy.greenfox.reboarding.seat.Seat;
 import academy.greenfox.reboarding.seat.SeatStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service

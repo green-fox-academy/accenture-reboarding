@@ -1,0 +1,33 @@
+### Post template
+
+POST http://localhost:8081/template
+content-type: application/json
+Accept: application/json
+
+{
+  "url": "file:///Users/aze/dev/accenture-reboarding/image-recognition/examples/template4.jpg"
+}
+
+### Process layout
+
+POST http://localhost:8081/layout
+content-type: application/json
+Accept: application/json
+
+{
+  "layoutUrl": "file:///Users/aze/dev/accenture-reboarding/image-recognition/examples/layout.jpg",
+  "templateId": "2.jpg"
+}
+
+### Mark layout
+
+PUT http://localhost:8081/layout
+content-type: application/json
+Accept: application/json
+
+{
+  "layoutId": "1.jpg",
+  "positions": [
+    {"x":729.0,"y":394.0},{"x":1130.0,"y":168.0}
+  ]
+}

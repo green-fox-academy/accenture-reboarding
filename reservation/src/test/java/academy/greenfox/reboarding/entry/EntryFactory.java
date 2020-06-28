@@ -1,7 +1,6 @@
 package academy.greenfox.reboarding.entry;
 
 import academy.greenfox.reboarding.office.SeatFactory;
-import academy.greenfox.reboarding.seat.Seat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
