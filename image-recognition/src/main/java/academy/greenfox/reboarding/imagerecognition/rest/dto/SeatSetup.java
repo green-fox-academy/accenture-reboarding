@@ -1,4 +1,4 @@
-package academy.greenfox.reboarding.imagerecognition.rest;
+package academy.greenfox.reboarding.imagerecognition.rest.dto;
 
 import java.util.List;
 
