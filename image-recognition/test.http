@@ -5,7 +5,7 @@ content-type: application/json
 Accept: application/json
 
 {
-  "url": "file:///Users/aze/dev/accenture-reboarding/image-recognition/examples/template4.jpg"
+  "url": "https://raw.githubusercontent.com/green-fox-academy/accenture-reboarding/master/image-recognition/examples/template4.jpg"
 }
 
 ### Process layout
@@ -15,8 +15,8 @@ content-type: application/json
 Accept: application/json
 
 {
-  "layoutUrl": "file:///Users/aze/dev/accenture-reboarding/image-recognition/examples/layout.jpg",
-  "templateId": "2.jpg"
+  "layoutUrl": "https://raw.githubusercontent.com/green-fox-academy/accenture-reboarding/master/image-recognition/examples/layout.jpg",
+  "templateId": "1.jpg"
 }
 
 ### Mark layout
