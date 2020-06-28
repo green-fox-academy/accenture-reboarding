@@ -1,0 +1,14 @@
+version: '2.0'
+services:
+  reservation:
+    build: ./reservation
+    ports:
+    - "8080:8080"
+  imageprocessing:
+    build: ./image-recognition
+    ports:
+    - "8081:8081"
+    environment:
+      - AWS_ACCESS
+      - AWS_SECRET
+      - AWS_BUCKET
