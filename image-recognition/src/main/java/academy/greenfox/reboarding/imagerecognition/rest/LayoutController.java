@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.greenfox.reboarding.imagerecognition.image.ImageService;
+import academy.greenfox.reboarding.imagerecognition.rest.dto.MarkRequest;
+import academy.greenfox.reboarding.imagerecognition.rest.dto.MarkedResponse;
+import academy.greenfox.reboarding.imagerecognition.rest.dto.ProcessRequest;
+import academy.greenfox.reboarding.imagerecognition.rest.dto.SeatSetup;
 import academy.greenfox.reboarding.imagerecognition.s3.S3Service;
 
 @RestController
@@ -23,13 +27,13 @@ public class LayoutController {
   
   @PostMapping
   public SeatSetup processLayout(@RequestBody ProcessRequest request) {
-    String layoutPath = service.storeLayout(request.layoutUrl);
-    return new SeatSetup(service.processLayout(layoutPath, request.templateId));
+    String layoutPath = service.storeLayout(request.getLayoutUrl());
+    return new SeatSetup(service.processLayout(layoutPath, request.getTemplateId()));
   }
 
   @PutMapping
   public MarkedResponse markLayout(@RequestBody MarkRequest request) {
-    String markedImagePath = service.markLayout(request.layoutId, request.positions);
+    String markedImagePath = service.markLayout(request.getLayoutId(), request.getPositions());
     return new MarkedResponse(s3service.uploadFile(markedImagePath));
   }
 }
