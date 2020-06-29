@@ -86,7 +86,7 @@ public class ControllerTests {
     mockMvc
         .perform(put("/layout").contentType(MediaType.APPLICATION_JSON)
             .content(mapper
-                .writeValueAsString(new MarkRequest("1.jpg", List.of(new Position(10, 10))))))
+                .writeValueAsString(new MarkRequest("1.jpg", List.of(new Position(10, 10)), null, null))))
         .andExpect(status().isOk()).andExpect(jsonPath("$.url").exists());
   }
 
@@ -95,7 +95,7 @@ public class ControllerTests {
     mockMvc
         .perform(put("/layout").contentType(MediaType.APPLICATION_JSON)
             .content(mapper
-                .writeValueAsString(new MarkRequest("-1.jpg", List.of(new Position(10, 10))))))
+                .writeValueAsString(new MarkRequest("-1.jpg", List.of(new Position(10, 10)), null, null))))
         .andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
   }
 }

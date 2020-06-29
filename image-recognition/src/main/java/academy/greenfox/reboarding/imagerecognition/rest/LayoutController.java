@@ -33,7 +33,7 @@ public class LayoutController {
 
   @PutMapping
   public MarkedResponse markLayout(@RequestBody MarkRequest request) {
-    String markedImagePath = service.markLayout(request.getLayoutId(), request.getPositions());
+    String markedImagePath = service.markLayout(request);
     return new MarkedResponse(s3service.uploadFile(markedImagePath));
   }
 }

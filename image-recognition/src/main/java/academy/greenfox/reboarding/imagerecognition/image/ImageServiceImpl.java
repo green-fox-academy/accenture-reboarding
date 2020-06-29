@@ -17,6 +17,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
 
+import academy.greenfox.reboarding.imagerecognition.rest.dto.MarkRequest;
+
 @Service
 public class ImageServiceImpl implements ImageService {
 
@@ -62,18 +64,25 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public String markLayout(String layout, List<Position> positions) {
-    if(layout == null) {
-      layout = LAYOUTS_PATH + layouts.get() + JPG_EXT; 
+  public String markLayout(MarkRequest data) {
+    if(data.getLayoutId() == null) {
+      data.setLayoutId(LAYOUTS_PATH + layouts.get() + JPG_EXT);
     }
-    Mat mat = opencv.read(LAYOUTS_PATH + layout);
-    for (Position position : positions) {
-      opencv.rect(mat, new Point(position.getX(), position.getY()), new Point(position.getX() + MARK_WIDTH, position.getY() + MARK_HEIGHT),
-        new Scalar(0, 0, 255), 2);
-    }
+    Mat mat = opencv.read(LAYOUTS_PATH + data.getLayoutId());
+    markPositionsWithColor(mat, data.getReserved(), new Scalar(0, 0, 255));
+    markPositionsWithColor(mat, data.getFree(), new Scalar(0, 255, 0));
+    markPositionsWithColor(mat, data.getInUse(), new Scalar(255, 0, 0));
     String markPath = MARKS_PATH + marks.getAndIncrement() + JPG_EXT;
     opencv.write(markPath, mat);
     return markPath;
+  }
+
+  private void markPositionsWithColor(Mat image, List<Position> positions, Scalar color) {
+    if (positions == null) return;
+    for (Position position : positions) {
+      opencv.rect(image, new Point(position.getX(), position.getY()), new Point(position.getX() + MARK_WIDTH, position.getY() + MARK_HEIGHT),
+        color, 2);
+    }
   }
   
   @Override

@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MarkRequest {
   String layoutId;
-  List<Position> positions;
+  List<Position> reserved;
+  List<Position> free;
+  List<Position> inUse;
 }
