@@ -2,6 +2,7 @@ package academy.greenfox.reboarding.office;
 
 import academy.greenfox.reboarding.seat.Seat;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Office {
 
   @Id
@@ -18,4 +20,7 @@ public class Office {
   @OneToMany(mappedBy = "office", cascade = CascadeType.ALL)
   List<Seat> seats;
 
+  public Office(String id) {
+    this.id = id;
+  }
 }

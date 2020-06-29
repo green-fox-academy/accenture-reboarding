@@ -1,8 +1,5 @@
-package academy.greenfox.reboarding.app;
+package academy.greenfox.reboarding.entry;
 
-import academy.greenfox.reboarding.entry.EnterException;
-import academy.greenfox.reboarding.entry.NoSuchEntryException;
-import academy.greenfox.reboarding.entry.RegisterException;
 import academy.greenfox.reboarding.error.ErrorMessageDTO;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;

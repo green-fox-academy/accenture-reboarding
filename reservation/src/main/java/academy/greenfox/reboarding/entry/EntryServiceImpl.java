@@ -5,24 +5,30 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import academy.greenfox.reboarding.office.NoSuchOfficeException;
-import academy.greenfox.reboarding.office.OfficeService;
+import academy.greenfox.reboarding.office.OfficeReservationService;
 import academy.greenfox.reboarding.seat.Seat;
 import academy.greenfox.reboarding.seat.SeatStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class EntryServiceImpl implements EntryService {
 
   private EntryRepository repo;
-  private OfficeService officeService;
+  private WebClient officeService;
+  private OfficeReservationService officeReservationService;
 
   private Logger logger;
 
-  public EntryServiceImpl(EntryRepository repo, OfficeService officeService) {
+  public EntryServiceImpl(EntryRepository repo,
+                          @Qualifier("OfficeService") WebClient officeService,
+                          OfficeReservationService officeReservationService) {
     this.repo = repo;
     this.officeService = officeService;
+    this.officeReservationService = officeReservationService;
     logger = LoggerFactory.getLogger(getClass());
   }
 
@@ -34,7 +40,7 @@ public class EntryServiceImpl implements EntryService {
     if (repo.findByUserIdAndDay(entry.getUserId(), entry.getDay()).isPresent()) {
       throw new RegisterException(RegisterException.ALREADY_REGISTERED);
     }
-    Seat reservedSeat = officeService.reserveASeat(entry.getOfficeId(), entry.getUserId());
+    Seat reservedSeat = officeReservationService.reserveASeat(entry.getOfficeId(), entry.getUserId());
     if (reservedSeat != null) {
       entry.setStatus(EntryStatus.ACCEPTED);
       entry.setSeat(reservedSeat);

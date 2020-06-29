@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import academy.greenfox.reboarding.office.OfficeService;
+import academy.greenfox.reboarding.office.OfficeReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 
 public class EntryServiceImplTest {
   private EntryServiceImpl service;
-  private OfficeService officeService;
+  private OfficeReservationService officeReservationService;
   private EntryRepository repo;
   private String userId;
   private String officeId;
@@ -28,8 +28,8 @@ public class EntryServiceImplTest {
   @BeforeEach
   public void setUp() {
     repo = Mockito.mock(EntryRepository.class);
-    officeService = Mockito.mock(OfficeService.class);
-    service = new EntryServiceImpl(repo, officeService);
+    officeReservationService = Mockito.mock(OfficeReservationService.class);
+    service = new EntryServiceImpl(repo, officeReservationService);
     userId = "chuck";
     officeId = "A66";
   }
@@ -94,7 +94,7 @@ public class EntryServiceImplTest {
         any()))
       .thenReturn(26);
 
-    when(officeService.reserveASeat(eq(officeId), eq(userId))).thenReturn(null);
+    when(officeReservationService.reserveASeat(eq(officeId), eq(userId))).thenReturn(null);
     
     when(repo.save(any(Entry.class))).thenReturn(entry);
     
