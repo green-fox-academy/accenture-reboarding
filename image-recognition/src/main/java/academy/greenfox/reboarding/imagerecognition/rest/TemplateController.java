@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.greenfox.reboarding.imagerecognition.image.ImageService;
+import academy.greenfox.reboarding.imagerecognition.rest.dto.TemplateIdResponse;
+import academy.greenfox.reboarding.imagerecognition.rest.dto.TemplateRequest;
 
 @RestController
 @RequestMapping("/template")
@@ -18,7 +20,7 @@ public class TemplateController {
 
   @PostMapping
   public TemplateIdResponse createTemplate(@RequestBody TemplateRequest request) {
-    return new TemplateIdResponse(service.storeTemplate(request.url));
+    return new TemplateIdResponse(service.storeTemplate(request.getUrl()));
   }
 
 }
