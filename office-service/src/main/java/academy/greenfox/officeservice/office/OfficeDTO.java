@@ -1,21 +1,21 @@
 package academy.greenfox.officeservice.office;
 
+import academy.greenfox.officeservice.seat.Seat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OfficeRequest {
+public class OfficeDTO {
 
-  @NotEmpty
   String id;
-  @NotEmpty
-  String layoutUrl;
+  String layoutId;
+  List<Seat> seats;
 
 }

@@ -3,13 +3,12 @@ package academy.greenfox.officeservice.office;
 import academy.greenfox.officeservice.seat.Seat;
 
 import java.util.List;
-import java.util.Map;
 
 public interface OfficeService {
 
-  Office findOffice(String id);
+  OfficeDTO findOffice(String id);
 
-  Office registerOffice(OfficeRequest office);
+  OfficeDTO registerOffice(OfficeRequest office);
 
   SeatSetup setupSeats(String floorPlanUrl);
 

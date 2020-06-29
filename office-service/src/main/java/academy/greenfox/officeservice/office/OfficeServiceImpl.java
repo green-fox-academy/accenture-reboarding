@@ -28,17 +28,18 @@ public class OfficeServiceImpl implements OfficeService {
   }
 
   @Override
-  public Office findOffice(String officeId) throws NoSuchOfficeException {
-    return officeRepository.findById(officeId).orElseThrow(NoSuchOfficeException::new);
+  public OfficeDTO findOffice(String officeId) throws NoSuchOfficeException {
+    return convert(officeRepository.findById(officeId).orElseThrow(NoSuchOfficeException::new));
   }
 
   @Override
-  public Office registerOffice(OfficeRequest req) {
+  public OfficeDTO registerOffice(OfficeRequest req) {
     Office office = convert(req);
-    SeatSetup seatSetup = setupSeats(req.getFloorPlanUrl());
+    SeatSetup seatSetup = setupSeats(req.getLayoutUrl());
     List<Seat> seats = convertToSeats(office, seatSetup);
+    office.getFloorPlan().setLayoutUrl(seatSetup.getLayoutId());
     office.setSeats(seats);
-    return officeRepository.save(office);
+    return convert(officeRepository.save(office));
   }
 
   @Override
@@ -69,11 +70,18 @@ public class OfficeServiceImpl implements OfficeService {
         .seats(new ArrayList<>())
         .build();
     FloorPlan floorPlan = FloorPlan.builder()
-        .imageUrl(req.floorPlanUrl)
         .office(office)
         .build();
     office.setFloorPlan(floorPlan);
     return office;
+  }
+
+  public OfficeDTO convert(Office office) {
+    return OfficeDTO.builder()
+        .id(office.getId())
+        .layoutId(office.getFloorPlan().getLayoutUrl())
+        .seats(office.getSeats())
+        .build();
   }
 
 }

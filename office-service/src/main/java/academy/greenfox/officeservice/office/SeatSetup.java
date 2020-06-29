@@ -9,5 +9,6 @@ import java.util.List;
 public class SeatSetup {
 
   List<Position> matches;
+  String layoutId;
 
 }

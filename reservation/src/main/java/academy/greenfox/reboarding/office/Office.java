@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,7 @@ public class Office {
 
   @Id
   String id;
+  String layoutId;
   @OneToMany(mappedBy = "office", cascade = CascadeType.ALL)
   List<Seat> seats;
 

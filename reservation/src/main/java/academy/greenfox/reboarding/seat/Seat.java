@@ -29,6 +29,7 @@ public class Seat {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Integer id;
+  String layoutUrl;
   @Embedded
 //  @AttributeOverrides({
 //      @AttributeOverride(name = "x", column = @Column(name = "x")),

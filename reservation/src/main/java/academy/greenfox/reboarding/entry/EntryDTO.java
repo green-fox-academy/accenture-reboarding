@@ -17,6 +17,7 @@ public class EntryDTO {
   String userId;
   String officeId;
   Integer seatId;
+  String seatLayoutUrl;
   EntryStatus status;
 
   LocalDate day;

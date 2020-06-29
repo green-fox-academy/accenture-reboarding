@@ -20,12 +20,12 @@ public class OfficeController {
   }
 
   @PostMapping
-  public ResponseEntity<Office> registerOffice(@RequestBody OfficeRequest req) {
+  public ResponseEntity<OfficeDTO> registerOffice(@RequestBody OfficeRequest req) {
     return ResponseEntity.status(HttpStatus.CREATED).body(officeService.registerOffice(req));
   }
 
   @GetMapping("/{officeId}")
-  public ResponseEntity<Office> modifyOffice(@PathVariable String officeId) {
+  public ResponseEntity<OfficeDTO> modifyOffice(@PathVariable String officeId) {
     return ResponseEntity.status(HttpStatus.OK).body(officeService.findOffice(officeId));
   }
 

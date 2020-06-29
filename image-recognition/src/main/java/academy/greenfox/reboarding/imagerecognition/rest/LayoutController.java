@@ -24,7 +24,7 @@ public class LayoutController {
   @PostMapping
   public SeatSetup processLayout(@RequestBody ProcessRequest request) {
     String layoutPath = service.storeLayout(request.layoutUrl);
-    return new SeatSetup(service.processLayout(layoutPath, request.templateId));
+    return new SeatSetup(service.processLayout(layoutPath, request.templateId), layoutPath);
   }
 
   @PutMapping

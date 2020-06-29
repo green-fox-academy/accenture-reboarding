@@ -2,32 +2,37 @@ package academy.greenfox.reboarding.entry;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
+import academy.greenfox.reboarding.externalservices.MarkRequest;
+import academy.greenfox.reboarding.externalservices.MarkResponse;
 import academy.greenfox.reboarding.office.NoSuchOfficeException;
 import academy.greenfox.reboarding.office.OfficeReservationService;
 import academy.greenfox.reboarding.seat.Seat;
+import academy.greenfox.reboarding.seat.SeatRepository;
 import academy.greenfox.reboarding.seat.SeatStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class EntryServiceImpl implements EntryService {
 
   private EntryRepository repo;
-  private WebClient officeService;
+  private WebClient imageService;
   private OfficeReservationService officeReservationService;
 
   private Logger logger;
 
   public EntryServiceImpl(EntryRepository repo,
-                          @Qualifier("OfficeService") WebClient officeService,
+                          @Qualifier("ImageService") WebClient imageService,
                           OfficeReservationService officeReservationService) {
     this.repo = repo;
-    this.officeService = officeService;
+    this.imageService = imageService;
     this.officeReservationService = officeReservationService;
     logger = LoggerFactory.getLogger(getClass());
   }
@@ -43,9 +48,27 @@ public class EntryServiceImpl implements EntryService {
     Seat reservedSeat = officeReservationService.reserveASeat(entry.getOfficeId(), entry.getUserId());
     if (reservedSeat != null) {
       entry.setStatus(EntryStatus.ACCEPTED);
+      if (reservedSeat.getLayoutUrl() == null) {
+        reservedSeat.setLayoutUrl(generateSeatLayout( reservedSeat));
+      }
       entry.setSeat(reservedSeat);
     }
     return convert(repo.save(entry));
+  }
+
+  @Override
+  public String generateSeatLayout(Seat seat) {
+    MarkRequest req = MarkRequest.builder()
+        .layoutId(seat.getOffice().getLayoutId())
+        .positions(Arrays.asList(seat.getPosition()))
+        .build();
+    MarkResponse response = imageService.put()
+        .uri("/layout")
+        .body(Mono.just(req), MarkRequest.class)
+        .retrieve()
+        .bodyToMono(MarkResponse.class)
+        .block();
+    return response.getUrl();
   }
 
   @Override
@@ -62,6 +85,7 @@ public class EntryServiceImpl implements EntryService {
       .userId(entry.getUserId())
       .officeId(entry.getOfficeId())
       .seatId(entry.getSeat() != null ? entry.getSeat().getId() : null)
+      .seatLayoutUrl(entry.seat.getLayoutUrl())
       .enteredAt(entry.getEnteredAt())
       .leftAt(entry.getLeftAt())
       .status(entry.getStatus())
