@@ -3,6 +3,7 @@ package academy.greenfox.reboarding.entry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import academy.greenfox.reboarding.externalservices.MarkRequest;
@@ -10,11 +11,11 @@ import academy.greenfox.reboarding.externalservices.MarkResponse;
 import academy.greenfox.reboarding.office.NoSuchOfficeException;
 import academy.greenfox.reboarding.office.OfficeReservationService;
 import academy.greenfox.reboarding.seat.Seat;
-import academy.greenfox.reboarding.seat.SeatRepository;
 import academy.greenfox.reboarding.seat.SeatStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -25,6 +26,8 @@ public class EntryServiceImpl implements EntryService {
   private EntryRepository repo;
   private WebClient imageService;
   private OfficeReservationService officeReservationService;
+  @Value("#{'${vip.userIds}'.split(',')}")
+  private List<String> vipList;
 
   private Logger logger;
 
@@ -111,6 +114,12 @@ public class EntryServiceImpl implements EntryService {
 
   @Override
   public EntryDTO enter(String userId) throws EnterException, NoSuchEntryException {
+    if (vipList.contains(userId)) {
+      return EntryDTO.builder()
+          .userId(userId)
+          .enteredAt(LocalDateTime.now())
+          .build();
+    }
     Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now()).orElseThrow(() -> new NoSuchEntryException(userId));
     if(entry.getStatus().equals(EntryStatus.USED)) {
       throw new EnterException(EnterException.ALREADY_USED);
@@ -124,6 +133,12 @@ public class EntryServiceImpl implements EntryService {
 
   @Override
   public EntryDTO leave(String userId) throws NoSuchEntryException {
+    if (vipList.contains(userId)) {
+      return EntryDTO.builder()
+          .userId(userId)
+          .leftAt(LocalDateTime.now())
+          .build();
+    }
     Entry entry = repo.findByUserIdAndDay(userId, LocalDate.now()).orElseThrow(() -> new NoSuchEntryException(userId));
     entry.setLeftAt(LocalDateTime.now());
     entry.setStatus(EntryStatus.USED);
