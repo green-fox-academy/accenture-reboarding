@@ -1,5 +1,7 @@
 package academy.greenfox.reboarding.office;
 
+import academy.greenfox.reboarding.externalservices.MarkRequest;
+import academy.greenfox.reboarding.externalservices.MarkResponse;
 import academy.greenfox.reboarding.officerule.OfficeRules;
 import academy.greenfox.reboarding.seat.Position;
 import academy.greenfox.reboarding.seat.Seat;
@@ -7,8 +9,10 @@ import academy.greenfox.reboarding.seat.SeatStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,13 +25,16 @@ public class OfficeReservationServiceImpl implements OfficeReservationService {
   private OfficeRepository officeRepository;
   private OfficeRules officeRules;
   private WebClient officeService;
+  private WebClient imageService;
 
   public OfficeReservationServiceImpl(OfficeRepository officeRepository,
                                       OfficeRules officeRules,
-                                      @Qualifier("OfficeService") WebClient officeService) {
+                                      @Qualifier("OfficeService") WebClient officeService,
+                                      @Qualifier("ImageService") WebClient imageService) {
     this.officeRepository = officeRepository;
     this.officeRules = officeRules;
     this.officeService = officeService;
+    this.imageService = imageService;
   }
 
   @Override
@@ -74,6 +81,31 @@ public class OfficeReservationServiceImpl implements OfficeReservationService {
     seat.setStatus(SeatStatus.RESERVED);
     seat.setMessage(userId);
     return seat;
+  }
+
+  @Override
+  public MarkResponse visualStatus(String officeId) throws NoSuchOfficeException {
+    Optional<Office> officeOp = officeRepository.findById(officeId);
+    Office office = officeOp.isPresent() ? officeOp.get() : updateOffice(officeId);
+    MarkRequest req = MarkRequest.builder()
+        .layoutId(office.getLayoutId())
+        .free(findSeats(office, SeatStatus.FREE))
+        .reserved(findSeats(office, SeatStatus.RESERVED))
+        .inUse(findSeats(office, SeatStatus.IN_USE))
+        .build();
+    return imageService.put()
+        .uri("/layout")
+        .body(Mono.just(req), MarkRequest.class)
+        .retrieve()
+        .bodyToMono(MarkResponse.class)
+        .block();
+  }
+
+  public List<Position> findSeats(Office office, SeatStatus free) {
+    return office.seats.stream()
+        .filter(s -> s.getStatus().equals(SeatStatus.FREE))
+        .map(s -> s.getPosition())
+        .collect(Collectors.toList());
   }
 
   public List<Seat> applyOfficeRules(List<Seat> seats, int lastIndex) {

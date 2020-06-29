@@ -52,7 +52,7 @@ public class EntryServiceImpl implements EntryService {
     if (reservedSeat != null) {
       entry.setStatus(EntryStatus.ACCEPTED);
       if (reservedSeat.getLayoutUrl() == null) {
-        reservedSeat.setLayoutUrl(generateSeatLayout( reservedSeat));
+        reservedSeat.setLayoutUrl(generateSeatLayout(reservedSeat));
       }
       entry.setSeat(reservedSeat);
     }
@@ -63,7 +63,7 @@ public class EntryServiceImpl implements EntryService {
   public String generateSeatLayout(Seat seat) {
     MarkRequest req = MarkRequest.builder()
         .layoutId(seat.getOffice().getLayoutId())
-        .positions(Arrays.asList(seat.getPosition()))
+        .reserved(Arrays.asList(seat.getPosition()))
         .build();
     MarkResponse response = imageService.put()
         .uri("/layout")

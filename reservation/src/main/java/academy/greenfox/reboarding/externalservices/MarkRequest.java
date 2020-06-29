@@ -15,6 +15,8 @@ import java.util.List;
 public class MarkRequest {
 
   String layoutId;
-  List<Position> positions;
+  List<Position> free;
+  List<Position> inUse;
+  List<Position> reserved;
 
 }
