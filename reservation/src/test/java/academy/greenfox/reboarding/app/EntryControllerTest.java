@@ -1,6 +1,7 @@
 package academy.greenfox.reboarding.app;
 
 import academy.greenfox.reboarding.entry.EnterException;
+import academy.greenfox.reboarding.entry.EntryController;
 import academy.greenfox.reboarding.entry.EntryDTO;
 import academy.greenfox.reboarding.entry.EntryDTOFactory;
 import academy.greenfox.reboarding.entry.EntryFactory;

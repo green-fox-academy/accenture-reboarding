@@ -19,7 +19,7 @@ Accept: application/json
   "templateId": "1.jpg"
 }
 
-### Mark layout
+### Mark layout only reserved
 
 PUT http://localhost:8081/layout
 content-type: application/json
@@ -27,7 +27,27 @@ Accept: application/json
 
 {
   "layoutId": "1.jpg",
-  "positions": [
+  "reserved": [
     {"x":729.0,"y":394.0},{"x":1130.0,"y":168.0}
+  ]
+}
+
+
+### Mark layout with all 3
+
+PUT http://localhost:8081/layout
+content-type: application/json
+Accept: application/json
+
+{
+  "layoutId": "1.jpg",
+  "reserved": [
+    {"x":729.0,"y":394.0},{"x":1130.0,"y":168.0}
+  ],
+  "free": [
+    {"x":629.0,"y":394.0},{"x":1030.0,"y":168.0}
+  ],
+  "inUse": [
+    {"x":529.0,"y":394.0},{"x":930.0,"y":168.0}
   ]
 }

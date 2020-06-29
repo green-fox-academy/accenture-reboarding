@@ -29,4 +29,13 @@ public class Position {
     return this;
   }
 
+  public void setX(double x) {
+    this.x = x;
+    this.key = new double[]{x, y};
+  }
+
+  public void setY(double y) {
+    this.y = y;
+    this.key = new double[]{x, y};
+  }
 }

@@ -11,4 +11,6 @@ import lombok.Getter;
 public class SeatSetup {
 
   private List<Position> matches;
+  private String layoutId;
+
 }

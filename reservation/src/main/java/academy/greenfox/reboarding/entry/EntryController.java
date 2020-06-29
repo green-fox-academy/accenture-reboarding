@@ -1,11 +1,4 @@
-package academy.greenfox.reboarding.app;
-
-import academy.greenfox.reboarding.entry.EnterException;
-import academy.greenfox.reboarding.entry.EntryDTO;
-import academy.greenfox.reboarding.entry.EntryRequest;
-import academy.greenfox.reboarding.entry.EntryService;
-import academy.greenfox.reboarding.entry.NoSuchEntryException;
-import academy.greenfox.reboarding.entry.RegisterException;
+package academy.greenfox.reboarding.entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

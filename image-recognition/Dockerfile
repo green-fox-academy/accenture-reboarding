@@ -2,6 +2,7 @@ FROM adamgyulavari/opencv-java:4.3.0 AS builder
 WORKDIR /workspace/app
 COPY src src
 COPY libs libs
+COPY examples examples
 COPY build.gradle build.gradle
 COPY settings.gradle settings.gradle
 COPY gradle gradle

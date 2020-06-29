@@ -18,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import academy.greenfox.reboarding.imagerecognition.rest.dto.MarkRequest;
+
 public class ImageServiceImplTest {
   private ImageServiceImpl service;
   private OpenCvWrapper opencv;
@@ -43,7 +45,7 @@ public class ImageServiceImplTest {
   @Test
   public void markLayoutCreatesDrawsRectAndWritesFile() {
     when(opencv.read("layout")).thenReturn(any());
-    service.markLayout("layout", List.of(new Position(10, 10)));
+    service.markLayout(new MarkRequest("layout", List.of(new Position(10, 10)), null, null));
     verify(opencv).rect(any(), any(), any(), any(), anyInt());
     verify(opencv).write(anyString(), any());
   }

@@ -28,12 +28,12 @@ public class LayoutController {
   @PostMapping
   public SeatSetup processLayout(@RequestBody ProcessRequest request) {
     String layoutPath = service.storeLayout(request.getLayoutUrl());
-    return new SeatSetup(service.processLayout(layoutPath, request.getTemplateId()));
+    return new SeatSetup(service.processLayout(layoutPath, request.getTemplateId()), layoutPath);
   }
 
   @PutMapping
   public MarkedResponse markLayout(@RequestBody MarkRequest request) {
-    String markedImagePath = service.markLayout(request.getLayoutId(), request.getPositions());
+    String markedImagePath = service.markLayout(request);
     return new MarkedResponse(s3service.uploadFile(markedImagePath));
   }
 }

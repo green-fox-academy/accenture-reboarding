@@ -10,26 +10,35 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import academy.greenfox.reboarding.office.OfficeService;
+import academy.greenfox.reboarding.office.OfficeReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 
 
 public class EntryServiceImplTest {
   private EntryServiceImpl service;
-  private OfficeService officeService;
+  private OfficeReservationService officeReservationService;
+  private WebClient imageService;
   private EntryRepository repo;
   private String userId;
   private String officeId;
+  private List<String> vipList;
 
   @BeforeEach
   public void setUp() {
+    vipList = Arrays.asList("aze", "kond", "tojas");
     repo = Mockito.mock(EntryRepository.class);
-    officeService = Mockito.mock(OfficeService.class);
-    service = new EntryServiceImpl(repo, officeService);
+    imageService = Mockito.mock(WebClient.class);
+    officeReservationService = Mockito.mock(OfficeReservationService.class);
+    service = new EntryServiceImpl(repo, imageService, officeReservationService);
+    ReflectionTestUtils.setField(service, "vipList", vipList);
     userId = "chuck";
     officeId = "A66";
   }
@@ -94,7 +103,7 @@ public class EntryServiceImplTest {
         any()))
       .thenReturn(26);
 
-    when(officeService.reserveASeat(eq(officeId), eq(userId))).thenReturn(null);
+    when(officeReservationService.reserveASeat(eq(officeId), eq(userId))).thenReturn(null);
     
     when(repo.save(any(Entry.class))).thenReturn(entry);
     
