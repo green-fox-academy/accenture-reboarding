@@ -15,10 +15,17 @@ The image processing service uploads to AWS S3 bucket, you need to provide crede
 - `AWS_SECRET` - AWS S3 secret key
 - `AWS_BUCKET` - name of the S3 bucket to work with
 
-## Build and run using docker-compose
+## Run using docker-compose
 
 ```sh
+docker-compose pull
 docker-compose up
+```
+
+### Build and run your own version
+
+```sh
+docker-compose up --build
 ```
 
 # Accenture Re-boarding
