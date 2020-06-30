@@ -188,7 +188,7 @@ Example request:
   "officeId": "A66",
   "day": "2020-06-29"
 }
-``
+```
 Example response:
 ```
 {
