@@ -55,6 +55,8 @@ Our reboarding system consists of 3 microservices and an Eureka discovery server
 - Office service
 - Image recognition service
 
+![Reboarding architecture](/accenture-reboarding-architecture.jpg)
+
 ### Image recognition service
 This microservice is responsible for all operations with images.
 
