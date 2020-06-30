@@ -10,6 +10,7 @@ services:
       - EUREKA_SERVER_URL=http://eureka-server:8761/eureka
     depends_on:
       - "eureka-server"
+    image: adamgyulavari/accenture-reboarding_reservation
   imageprocessing:
     build: ./image-recognition
     ports:
@@ -23,6 +24,7 @@ services:
       - AWS_BUCKET
     depends_on:
       - "eureka-server"
+    image: adamgyulavari/accenture-reboarding_imageprocessing
   office:
     build: ./office-service
     ports:
@@ -33,7 +35,9 @@ services:
       - EUREKA_SERVER_URL=http://eureka-server:8761/eureka
     depends_on:
       - "eureka-server"
+    image: adamgyulavari/accenture-reboarding_office
   eureka-server:
     build: ./discovery-server
     ports:
       - "8761:8761"
+    image: adamgyulavari/accenture-reboarding_eureka
