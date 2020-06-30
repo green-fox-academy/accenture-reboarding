@@ -1,5 +1,12 @@
 # Accenture Re-boarding project
 
+## Deployed version
+
+- Eureka Discovery server: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8761/
+- Image recognition service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8081/
+- Reservation service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8082/
+- Office service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8083/
+
 ## Configuration
 
 The image processing service uploads to AWS S3 bucket, you need to provide credentials as environment variables:
