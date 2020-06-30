@@ -7,6 +7,12 @@
 - Reservation service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8082/
 - Office service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8083/
 
+## API spec
+
+- Image recognition service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8081/swagger-ui.html
+- Reservation service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8082/swagger-ui.html
+- Office service: http://ec2-18-195-13-220.eu-central-1.compute.amazonaws.com:8083/swagger-ui.html
+
 ## Configuration
 
 The image processing service uploads to AWS S3 bucket, you need to provide credentials as environment variables:
